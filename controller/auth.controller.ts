@@ -108,6 +108,16 @@ export const getAuthor = async (req: Request, res: Response) => {
 
 export const updateAuthor = async (req: Request, res: Response) => {
   try {
+    const {userName} = req.body;
+    const userId = req.params.id;
+
+    const existsUserName = await User.findOne({userName, _id: {$ne: userId}});
+
+    if(existsUserName) {
+      return res.status(400).json({
+        error: "Username already exists. Please Change"
+      })
+    }
     const updatedAuthor = await User.findByIdAndUpdate(
       req.params.id,
       req.body,
