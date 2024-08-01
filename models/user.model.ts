@@ -5,7 +5,8 @@ export interface UserDocument extends Document {
   name: string;
   password: string;
   fullName: string,
-  confirmPassword: string
+  confirmPassword: string,
+  userName: string,
 }
 
 const userSchema = new mongoose.Schema(
@@ -26,6 +27,9 @@ const userSchema = new mongoose.Schema(
     confirmPassword: {
       type: String,
     },
+    userName: {
+      type: String,
+    }
   },
   {
     timestamps: true,

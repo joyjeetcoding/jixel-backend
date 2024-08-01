@@ -14,7 +14,7 @@ export const signUp = async (req: Request, res: Response) => {
     const user = await User.findOne({ email });
 
     if (user) {
-      return res.status(400).json({ error: "User's email already exists" });
+      return res.status(400).json({ error: "User's Email already exists" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -55,7 +55,7 @@ export const signIn = async (req: Request, res: Response) => {
     const isPassword = await bcrypt.compare(password, user?.password || "");
 
     if (!user || !isPassword) {
-      return res.status(400).json({ error: "Invalid Email-ID or password" });
+      return res.status(400).json({ error: "Invalid email or password" });
     }
 
     generatetokenandSetCookie(user._id, res);
@@ -85,3 +85,50 @@ export const logout = (req: Request, res: Response) => {
     });
   }
 };
+
+export const getAuthor = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const getAuthorDetails = await User.findById(id);
+
+    if (getAuthorDetails) {
+      res.status(200).json(getAuthorDetails);
+    } else {
+      res.status(400).json({
+        error: "No Author Found",
+      });
+    }
+  } catch (error: any) {
+    console.log("Error in getAuthor Controller: ", error.message);
+    res.status(500).json({
+      error: "Internal Server Error",
+    });
+  }
+};
+
+export const updateAuthor = async (req: Request, res: Response) => {
+  try {
+    const updatedAuthor = await User.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (updatedAuthor) {
+      res.status(200).json(updatedAuthor);
+    } else {
+      res.status(400).json({
+        error: "Cannot update this",
+      });
+    }
+  } catch (error: any) {
+    console.log("Error in update author Controller: ", error.message);
+    res.status(500).json({
+      error: "Internal Server Error",
+    });
+  }
+};
+
