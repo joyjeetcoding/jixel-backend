@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/user.model";
 import bcrypt from "bcryptjs";
 import generatetokenandSetCookie from "../utils/generateToken";
+import cloudinary from "cloudinary";
 
 export const signUp = async (req: Request, res: Response) => {
   try {
@@ -118,14 +119,32 @@ export const updateAuthor = async (req: Request, res: Response) => {
         error: "Username already exists. Please Change"
       })
     }
+    const image = req.file as Express.Multer.File;
+    let imageUrl;
+
+    if(image) {
+      const base64Image = Buffer.from(image.buffer).toString("base64");
+      const dataURI = `data:${image.mimetype};base64,${base64Image}`;
+  
+      const uploadResponse = await cloudinary.v2.uploader.upload(dataURI);
+
+      imageUrl = uploadResponse.secure_url;
+    }
+    
+    const updatedData = {...req.body};
+    if(imageUrl) {
+      updatedData.imageUrl = imageUrl;
+    }
+
     const updatedAuthor = await User.findByIdAndUpdate(
-      req.params.id,
-      req.body,
+      userId,
+      updatedData,
       {
         new: true,
         runValidators: true,
       }
     );
+
 
     if (updatedAuthor) {
       res.status(200).json(updatedAuthor);
