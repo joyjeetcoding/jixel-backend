@@ -3,6 +3,7 @@ import User from "../models/user.model";
 import bcrypt from "bcryptjs";
 import generatetokenandSetCookie from "../utils/generateToken";
 import cloudinary from "cloudinary";
+import { generateRandomUsername } from "../utils/generateRandomUsername";
 
 export const signUp = async (req: Request, res: Response) => {
   try {
@@ -21,10 +22,17 @@ export const signUp = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
 
+    let randomUsername = generateRandomUsername();
+
+    while(await User.findOne({userName : randomUsername})) {
+      randomUsername = generateRandomUsername();
+    }
+
     const newUser = new User({
       email,
       fullName,
       password: hashPassword,
+      userName: randomUsername
     });
 
     if (newUser) {
@@ -36,6 +44,7 @@ export const signUp = async (req: Request, res: Response) => {
         _id: newUser._id,
         fullName: newUser.fullName,
         email: newUser.email,
+        userName: newUser.userName
       });
     } else {
       res.status(400).json("Invalid User Data");
