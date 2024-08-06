@@ -7,6 +7,7 @@ import {
   updateAuthor,
 } from "../controller/auth.controller";
 import multer from "multer";
+import protectRoute from "../middleware/protectRoute";
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ router.post("/signup", signUp);
 router.post("/login", signIn);
 router.post("/logout", logout);
 
-router.get("/author/:id", getAuthor);
+router.get("/author/:id", protectRoute, getAuthor);
 router.put("/author/:id", upload.single("imageFile"), updateAuthor);
 
 export default router;

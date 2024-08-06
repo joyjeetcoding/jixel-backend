@@ -5,7 +5,13 @@ import User, { UserDocument } from "../models/user.model";
 interface DecodedToken {
   userId: Object;
 }
-
+declare global {
+  namespace Express {
+    interface Request {
+      user: UserDocument;
+    }
+  }
+}
 const protectRoute = async (
   req: Request,
   res: Response,
@@ -29,7 +35,7 @@ const protectRoute = async (
       return res.status(401).json({ error: "Unauthorized - Invalid Token" });
     }
 
-    const user = await User.findById(decoded.userId);
+    const user = await User.findById(decoded.userId).select("-password");
 
     if (!user) {
       return res.status(401).json({ error: "User not found" });
