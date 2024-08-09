@@ -118,15 +118,15 @@ export const getAuthor = async (req: Request, res: Response) => {
 
 export const updateAuthor = async (req: Request, res: Response) => {
   try {
-    const {userName} = req.body;
+    const { userName } = req.body;
     const userId = req.params.id;
 
-    const existsUserName = await User.findOne({userName, _id: {$ne: userId}});
+    const existsUserName = await User.findOne({ userName, _id: { $ne: userId } });
 
-    if(existsUserName) {
+    if (existsUserName) {
       return res.status(400).json({
-        error: "Username already exists. Please Change"
-      })
+        error: "Username already exists. Please choose a different one.",
+      });
     }
     const image = req.file as Express.Multer.File;
     let imageUrl;
@@ -163,7 +163,7 @@ export const updateAuthor = async (req: Request, res: Response) => {
       });
     }
   } catch (error: any) {
-    console.log("Error in update author Controller: ", error.message);
+    console.error("Error in update author Controller: ", error.message);
     res.status(500).json({
       error: "Internal Server Error",
     });
