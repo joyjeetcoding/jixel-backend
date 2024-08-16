@@ -9,6 +9,7 @@ export const createPost = async (req: Request, res: Response) => {
     const image = req.file as Express.Multer.File;
 
     let imageUrl;
+    
     if (image) {
       const base64Image = Buffer.from(image.buffer).toString("base64");
 
@@ -24,6 +25,7 @@ export const createPost = async (req: Request, res: Response) => {
       summary,
       description,
       imgUrl: imageUrl,
+      author: req.user._id
     });
 
     if (newPost) {
