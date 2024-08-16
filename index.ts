@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import connectToDB from "./db/connectToDB";
 import authRoute from "./routes/auth.routes.ts";
+import postRoute from "./routes/post.routes.ts";
 import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
 import cookieParser from "cookie-parser";
@@ -26,6 +27,7 @@ app.use(cors({
 app.use(cookieParser())
 
 app.use("/api/auth", authRoute);
+app.use("/api/user", postRoute);
 
 app.listen(PORT, () => {
   console.log(`Server Connected to the port ${PORT}`);
