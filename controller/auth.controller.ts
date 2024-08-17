@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User from "../models/user.model";
+import User, { UserDocument } from "../models/user.model";
 import bcrypt from "bcryptjs";
 import generatetokenandSetCookie from "../utils/generateToken";
 import cloudinary from "cloudinary";
@@ -28,11 +28,11 @@ export const signUp = async (req: Request, res: Response) => {
       randomUsername = generateRandomUsername();
     }
 
-    const newUser = new User({
+    const newUser: UserDocument = new User({
       email,
       fullName,
       password: hashPassword,
-      userName: randomUsername
+      userName: randomUsername,
     });
 
     if (newUser) {
