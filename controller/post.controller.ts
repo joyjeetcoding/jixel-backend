@@ -167,7 +167,7 @@ export const getPostById = async (req: Request, res: Response) => {
 
 export const getAllPosts = async (req: Request, res: Response) => {
   try {
-    const getPost = await PostModel.find({});
+    const getPost = await PostModel.find({}).populate("author", "fullName userName").exec();
 
     if (getPost) {
       res.status(200).json(getPost);

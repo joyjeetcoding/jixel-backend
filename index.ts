@@ -20,10 +20,13 @@ cloudinary.config({
 
 
 app.use(express.json());
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true
+  origin: process.env.FRONTEND_URL,  // Your frontend URL (e.g., http://localhost:3000)
+  credentials: true  // Include credentials (cookies, authentication headers, etc.)
 }));
+
+
 app.use(cookieParser())
 
 app.use("/api/auth", authRoute);
