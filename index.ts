@@ -1,4 +1,5 @@
 import express from "express";
+import { Request, Response } from "express";
 import dotenv from "dotenv";
 import connectToDB from "./db/connectToDB";
 import authRoute from "./routes/auth.routes";
@@ -17,7 +18,9 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-
+app.get("/health", async(req:Request, res: Response) => {
+  res.send({message: "Health is ok!"})
+})
 
 app.use(express.json());
 
