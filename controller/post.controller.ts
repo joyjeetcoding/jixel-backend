@@ -169,7 +169,7 @@ export const getPostById = async (req: Request, res: Response) => {
 export const getAllPosts = async (req: Request, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 5;
+    const limit = parseInt(req.query.limit as string) || 3;
     const skip = (page - 1) * limit;
 
     const posts = await PostModel.find({})
@@ -179,6 +179,8 @@ export const getAllPosts = async (req: Request, res: Response) => {
       .exec();
 
     const totalPosts = await PostModel.countDocuments();
+
+   
 
     if (posts) {
       res.status(200).json({
