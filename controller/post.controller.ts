@@ -147,7 +147,9 @@ export const getPostById = async (req: Request, res: Response) => {
   try {
     const postId = req.params.id;
 
-    const getPost = await PostModel.findById(postId).populate("author", "fullName userName").exec();
+    const getPost = await PostModel.findById(postId)
+      .populate("author", "fullName userName")
+      .exec();
 
     if (getPost) {
       res.status(200).json(getPost);
@@ -164,13 +166,26 @@ export const getPostById = async (req: Request, res: Response) => {
   }
 };
 
-
 export const getAllPosts = async (req: Request, res: Response) => {
   try {
-    const getPost = await PostModel.find({}).populate("author", "fullName userName").exec();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 5;
+    const skip = (page - 1) * limit;
 
-    if (getPost) {
-      res.status(200).json(getPost);
+    const posts = await PostModel.find({})
+      .populate("author", "fullName userName")
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    const totalPosts = await PostModel.countDocuments();
+
+    if (posts) {
+      res.status(200).json({
+        posts,
+        currentPage: page,
+        totalPages: Math.ceil(totalPosts / limit),
+      });
     } else {
       res.status(500).json({
         error: "Failed to get the Post",
