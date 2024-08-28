@@ -5,7 +5,7 @@
   "scripts": {
     "server": "nodemon index.ts",
     "start": "node dist/index.js",
-    "build": "npm install && yarn add typescript && yarn tsc"
+    "build": "yarn install && yarn add typescript && yarn tsc"
   },
   "keywords": [],
   "author": "",
