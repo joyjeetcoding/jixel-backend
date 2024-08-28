@@ -1,6 +1,8 @@
 import cloudinary from "cloudinary";
 import { Request, Response } from "express";
 import PostModel from "../models/posts.model";
+import mongoose, { Document, Schema, Types } from "mongoose";
+
 
 export const createPost = async (req: Request, res: Response) => {
   try {
@@ -200,3 +202,41 @@ export const getAllPosts = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+export const lovePost = async(req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const userId = req.user?._id as mongoose.Types.ObjectId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    const post = await PostModel.findById(id);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.lovedBy.includes(userId as any)) {
+      return res.status(400).json({ message: "You have already loved this post" });
+    }
+
+    post.loveCount += 1;
+    post.lovedBy.push(userId as any);
+
+    await post.save();
+
+    return res.status(200).json({
+      message: "Post loved successfully",
+      loveCount: post.loveCount,
+    });
+
+  } catch (error: any) {
+    console.log("Error in lovePost Controller ", error.message);
+    return res.status(500).json({
+      error: "Internal Server Error",
+    })
+  }
+}
