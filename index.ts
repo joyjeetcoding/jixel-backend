@@ -1,8 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectToDB from "./db/connectToDB";
-import authRoute from "./routes/auth.routes.ts";
-import postRoute from "./routes/post.routes.ts";
+import authRoute from "./routes/auth.routes";
+import postRoute from "./routes/post.routes";
 import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
 import cookieParser from "cookie-parser";
