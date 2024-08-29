@@ -5,3 +5,8 @@ declare module 'express-serve-static-core' {
     user?: UserDocument;
   }
 }
+
+declare module 'bcryptjs';
+declare module 'cookie-parser';
+declare module 'jsonwebtoken';
+declare module 'multer';
