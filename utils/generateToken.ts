@@ -10,7 +10,7 @@ const generatetokenandSetCookie = (userId: Object, res: Response) => {
     maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in milliseconds
     httpOnly: true, // Cookie cannot be accessed via JavaScript
     sameSite: "none", // Ensure this is appropriate for your use case
-    secure: process.env.NODE_ENV === "production", // Ensure cookies are only sent over HTTPS in production
+    secure: true, // Ensure cookies are only sent over HTTPS in production
   });
 };
 
