@@ -18,12 +18,7 @@ const protectRoute = async (
   next: NextFunction
 ) => {
   try {
-    const token = req.cookies.jwt;
-
-    console.log("Cookies", req.cookies);
-    console.log("Token", token);
-    
-    
+    const token = req.cookies.jwt;    
 
     if (!token) {
       return res

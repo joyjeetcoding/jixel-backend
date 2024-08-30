@@ -6,12 +6,7 @@ const generatetokenandSetCookie = (userId: Object, res: Response) => {
     expiresIn: "15d", // Token expires in 15 days
   });
 
-  res.cookie("jwt", token, {
-    maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in milliseconds
-    httpOnly: true, // Cookie cannot be accessed via JavaScript
-    sameSite: "none", // Ensure this is appropriate for your use case
-    secure: true, // Ensure cookies are only sent over HTTPS in production
-  });
+  res.cookie("jwt", token);
 };
 
 export default generatetokenandSetCookie;
