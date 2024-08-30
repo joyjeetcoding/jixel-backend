@@ -9,7 +9,7 @@ const generatetokenandSetCookie = (userId: Object, res: Response) => {
   res.cookie("jwt", token, {
     maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in milliseconds
     httpOnly: true, // Cookie cannot be accessed via JavaScript
-    sameSite: "strict", // Ensure this is appropriate for your use case
+    sameSite: "none", // Ensure this is appropriate for your use case
     secure: process.env.NODE_ENV === "production", // Ensure cookies are only sent over HTTPS in production
   });
 };
