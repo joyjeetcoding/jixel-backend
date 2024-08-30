@@ -5,6 +5,7 @@ import User, { UserDocument } from "../models/user.model";
 interface DecodedToken {
   userId: Object;
 }
+
 declare global {
   namespace Express {
     interface Request {
@@ -12,19 +13,24 @@ declare global {
     }
   }
 }
+
 const protectRoute = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const token = req.cookies.jwt;    
-
-    if (!token) {
+    const authHeader = req.headers.authorization;
+    
+    // Check if Authorization header is present and has the Bearer token
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res
         .status(401)
         .json({ error: "Unauthorized - No Token Provided" });
     }
+
+    // Extract the token from the header
+    const token = authHeader.split(" ")[1];
 
     const decoded = jwt.verify(
       token,

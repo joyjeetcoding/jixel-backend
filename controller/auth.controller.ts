@@ -4,6 +4,13 @@ import bcrypt from "bcryptjs";
 import generatetokenandSetCookie from "../utils/generateToken";
 import cloudinary from "cloudinary";
 import { generateRandomUsername } from "../utils/generateRandomUsername";
+import jwt from "jsonwebtoken";
+
+const generatetoken = (userId: string) => {
+  return jwt.sign({ userId }, process.env.JWT_SECRET as string, {
+    expiresIn: "15d", // Token expires in 15 days
+  });
+};
 
 export const signUp = async (req: Request, res: Response) => {
   try {
@@ -36,15 +43,17 @@ export const signUp = async (req: Request, res: Response) => {
     });
 
     if (newUser) {
-      generatetokenandSetCookie(newUser._id, res);
+      
 
       await newUser.save();
+      const token = generatetoken(newUser._id.toString());
 
       res.status(200).json({
         _id: newUser._id,
         fullName: newUser.fullName,
         email: newUser.email,
-        userName: newUser.userName
+        userName: newUser.userName,
+        token
       });
     } else {
       res.status(400).json("Invalid User Data");
@@ -68,12 +77,13 @@ export const signIn = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
-    generatetokenandSetCookie(user._id, res);
+    const token = generatetoken(user._id.toString());
 
     res.status(200).json({
       _id: user._id,
       fullName: user.fullName,
       email: user.email,
+      token
     });
   } catch (error: any) {
     console.log("Error in Login Controller");
@@ -85,7 +95,6 @@ export const signIn = async (req: Request, res: Response) => {
 
 export const logout = (req: Request, res: Response) => {
   try {
-    res.cookie("jwt", "", { maxAge: 0 });
     res.status(201).json({ message: "Logged Out Successfully" });
   } catch (error: any) {
     console.log("Error in Logout Controller", error.message);

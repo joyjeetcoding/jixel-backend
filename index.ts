@@ -25,22 +25,7 @@ app.get("/health", async(req:Request, res: Response) => {
 app.use(express.json());
 app.use(cookieParser())
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests from localhost during development and your production frontend
-    const allowedOrigins = [process.env.FRONTEND_URL, 'https://jixel.vercel.app'];
-
-    // If there's no origin or the origin is in the allowed list, allow the request
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true // Allow cookies to be sent
-}));
-
-
+app.use(cors());
 
 
 app.use("/api/auth", authRoute);
